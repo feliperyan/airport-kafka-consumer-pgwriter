@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 # CONSTANTS
 
 TOPIC = os.environ.get('TOPIC', 'test')
-KAFKA_PREFIX = os.environ.get('KAFKA_PEFIX', '')
+KAFKA_PREFIX = os.environ.get('KAFKA_PREFIX', '')
 TOPIC = KAFKA_PREFIX + TOPIC
 
 logging.info('\nConsumer is using topic: ' + TOPIC + '\n')
