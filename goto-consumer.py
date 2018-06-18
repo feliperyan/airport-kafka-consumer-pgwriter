@@ -59,7 +59,7 @@ class KafkaSimpleConsumer():
     
     def start_listening(self):
         logging.info('\nListening...\n')    
-        while true:
+        while True:
             time.sleep(5)
             logging.info('\nSleeping...\n')            
             to_write = list()
