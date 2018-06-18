@@ -1,0 +1,13 @@
+asn1crypto==0.24.0
+certifi==2018.4.16
+cffi==1.11.5
+chardet==3.0.4
+cryptography==2.2.2
+idna==2.7
+-e git+https://github.com/feliperyan/kafka-helper.git@e71fcc4629d8c49c11ec2c21f7081efbaba47180#egg=kafka_helper
+kafka-python==1.4.3
+psycopg2==2.7.5
+pycparser==2.18
+requests==2.19.1
+six==1.11.0
+urllib3==1.23
