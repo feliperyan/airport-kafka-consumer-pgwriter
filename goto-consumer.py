@@ -21,6 +21,7 @@ logging.info('\nConsumer is using topic: ' + TOPIC + '\n')
 class KafkaSimpleConsumer():
     def __init__(self):
         logging.info('Started consuming\n')        
+        self.use_db = False
 
         try: #heroku
             self.consumer = kafka_helper.get_kafka_consumer(topic=TOPIC)                        
