@@ -47,12 +47,12 @@ class KafkaSimpleConsumer():
         logging.info('Attempting to write to PG: ' + str(data))
 
         external_event_id = str(uuid.uuid4())
-        pos_x__c = str(data['customer_id__c'])
-        pos_y__c = str(data['customer_id__c'])
-        patience__c = str(data['customer_id__c'])
+        pos_x__c = str(data['move'][0])
+        pos_y__c = str(data['move'][1])
+        patience__c = str(data['move'][2])
 
         self.cur.execute("insert into salesforce.Captured_Event__c \
-            (external_event_id__c, customer_id__c, payload__c) VALUES \
+            (external_event_id__c, pos_x__c, pos_y__c, patience__c) VALUES \
             (%s, %s, %s, %s)", (external_event_id, pos_x__c, pos_y__c, patience__c) )
         
         self.conn.commit()
@@ -60,25 +60,19 @@ class KafkaSimpleConsumer():
     
     def start_listening(self):
         logging.info('\nListening for %s\n', TOPIC)    
+        logging.info('\nStarting in 5...\n')            
+        time.sleep(5)            
+        
         while True:
-            logging.info('\nSleeping...\n')            
-            time.sleep(5)            
-            to_write = list()
-
             for msg in self.consumer:
                 logging.info(msg.value)
                 if type(msg.value) != dict:
                     payload = json.loads(msg.value)
                 else:
                     payload = msg.value
-
-                to_write.append(payload)
                  
-
                 if self.use_db is True:
-                    self.write_to_pg(payload)
-            
-            logging.info('\nAttempted to write to DB: %d rows', len(to_write))                       
+                    self.write_to_pg(payload)                        
 
 
 if __name__ == '__main__':
