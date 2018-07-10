@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 
 # CONSTANTS
 
-TOPIC = os.environ.get('TOPIC', 'test')
+TOPIC = os.environ.get('TOPIC', 'movement-keyword')
 KAFKA_PREFIX = os.environ.get('KAFKA_PREFIX', '')
 TOPIC = KAFKA_PREFIX + TOPIC
 
@@ -28,7 +28,7 @@ class KafkaSimpleConsumer():
             logging.info('RUNNING CONSUMER ON HEROKU\n') 
 
         except Exception: #locally on docker                           
-            consumer = KafkaConsumer('test', bootstrap_servers='localhost:9092', value_deserializer=lambda m: json.loads(m.decode('utf-8')))
+            consumer = KafkaConsumer(TOPIC, bootstrap_servers='localhost:9092', value_deserializer=lambda m: json.loads(m.decode('utf-8')))
             self.consumer = consumer
             logging.info('RUNNING CONSUMER LOCAL - so not using kafka_helper\n')
 
@@ -64,13 +64,22 @@ class KafkaSimpleConsumer():
         time.sleep(5)            
         
         while True:
+            messages = list()
+            t1 = time.time()
+
             for msg in self.consumer:
-                logging.info(msg.value)
+                # logging.info(msg.value)
                 if type(msg.value) != dict:
                     payload = json.loads(msg.value)
                 else:
                     payload = msg.value
-                 
+                
+                t2 = time.time()
+                if (t2 - t1 >= 10):
+                    # reset time
+                    t1 = time.time()
+                    logging.info('\n --- Time Window --- \n')                                        
+
                 if self.use_db is True:
                     self.write_to_pg(payload)                        
 
